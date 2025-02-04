@@ -1,6 +1,6 @@
-FROM python:3.12-slim
+FROM python:3.12
 
-WORKDIR /docker_practice
+WORKDIR /code
 
 RUN apt-get update \
     && apt-get install -y gcc libpq-dev \
@@ -8,19 +8,13 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 
-RUN pip install poetry && poetry --version
+COPY requirements.txt ./
 
-COPY pyproject.toml poetry.lock ./
-
-RUN poetry install --no-root
-
-RUN poetry show
-
-RUN python -m django --version
-
-
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+
+RUN which python
 
 ENV SECRET_KEY="django-insecure-ifnprns$7a_dqjp81k9d)ktl2o(l(h#c-(j_^e5^-xo&oy-5su"
 
